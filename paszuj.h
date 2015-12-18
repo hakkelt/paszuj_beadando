@@ -4,54 +4,65 @@
 #include <list>
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <map>
 
-struct Paszuj {
-private:
-	map<string, Varos> varosok; // v�ros neve, kont�nerekb�l �ll� vektor
-	vector<hajo> hajok; // navajonmilehet.
-public:
-	void beolvas(string fajlNev); // Detti �rja meg a beolvas�s fvt
-	void kiir(string fajlNev); // Detti �rja meg a ki�r�s fvt
-	void parancsol(); // HT
-};
+/// Ha ezt a fájlt módosítjátok, akkor gyorsan szinkronizáljátok, nehogy felülírjuk egymás munkáját
 
-struct Varos {
-	vector<Kontener> kontenerek;
-};
+/// -------- Detti -----------
 struct Kontener {
-	string hely;
-	string rakomanyNev;
-	string celHely;
+	std::string hely;
+	std::string rakomanyNev;
+	std::string celHely;
 	int bonuszIdo;
 };
+struct Varos {
+	std::vector<Kontener> kontenerek;
+};
 struct Hajo {
-	string jaratKod;
+	std::string jaratKod;
 	int kapacitas;
-	string honnanIndul;
-	string hovaMegy;
+	std::string honnanIndul;
+	std::string hovaMegy;
 	int hanyNapAlattOda;
 	int hanyNapAlattVissza;
 int fazisEltolodas;
 };
 
-// ------- Zoca --------------
-struct Graf {
-	vector<Csucs> csucsok;
-	void frissit (); //friss�ti az �sszes cs�cs int �rt�k�t, azaz id�k�lts.-�t
-};
-
+/// ------- Zsolti --------------
 struct Csucs {
-	vector < pair<Csucs*, int> > elek;
+    std::list<Kontener> kontenerek;          // ezt az elején fel kéne tölteni
+	std::unordered_map<Csucs*, int> elek;    // ugyanúgy működik mint a sima map, csak sokkal gyorsabb
+	std::string nev;                         // Város neve
+};
+struct Graf {
+	std::vector<Csucs> csucsok;
+	void frissit ();                    //frissíti az összes csúcs int értékét, azaz idõkölts.-ét
 };
 
-// ------- HT -----------
+/// ------- HT -----------
 struct Parancs {
 	int mikorErkezik;
-	string jaratKod;
-	string rakomanyNev;
+	std::string jaratKod;
+	std::string rakomanyNev;
 	int bonuszIdo;
 	int mennyiseg;
+};
 
+struct Paszuj {
+private:
+	std::map<std::string, Varos> varosok;   // város neve, konténerekbõl álló vektor
+	std::vector<Hajo> hajok;                // navajonmilehet.
+	Graf graf;
+	void epitGraf();                        // Gráf építése - Zsolti feladata
+	void parancsol();                       // Tamás írja
+public:
+	void beolvas(std::string varosok, std::string hajok);      // Detti írja meg a beolvasós fvt
+	void kiir(std::string fajlNev);         // Detti írja meg a kiírós fvt
+	void rum() {
+        epitGraf();
+        parancsol();
+	}
 };
 
 #endif // PASZUJ_H_INCLUDED

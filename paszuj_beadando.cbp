@@ -32,7 +32,11 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="detti.cpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="paszuj.h" />
+		<Unit filename="tamas.cpp" />
+		<Unit filename="zsolti.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
