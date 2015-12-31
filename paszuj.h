@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <map>
 
 /// Ha ezt a fájlt módosítjátok, akkor gyorsan szinkronizáljátok, nehogy felülírjuk egymás munkáját
 
@@ -32,7 +31,7 @@ int fazisEltolodas;
 /// ------- Zsolti --------------
 struct Csucs {
     std::list<Kontener> kontenerek;          // ezt az elején fel kéne tölteni
-	std::unordered_map<Csucs*, int> elek;    // ugyanúgy működik mint a sima map, csak sokkal gyorsabb
+	std::unordered_map<std::string, int> elek;    // ugyanúgy működik mint a sima map, csak sokkal gyorsabb
 	std::string nev;                         // Város neve
 };
 struct Graf {
@@ -51,11 +50,12 @@ struct Parancs {
 
 struct Paszuj {
 private:
-	std::map<std::string, Varos> varosok;   // város neve, konténerekbõl álló vektor
+	std::unordered_map<std::string, Varos> varosok;   // város neve, konténerekbõl álló vektor
 	std::vector<Hajo> hajok;                // navajonmilehet.
 	Graf graf;
 	void epitGraf();                        // Gráf építése - Zsolti feladata
 	void parancsol();                       // Tamás írja
+	int Dijkstra(Graf graf, std::string honnan, std::string hova);
 public:
 	void beolvas(std::string varosok, std::string hajok);      // Detti írja meg a beolvasós fvt
 	void kiir(std::string fajlNev);         // Detti írja meg a kiírós fvt
