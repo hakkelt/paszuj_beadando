@@ -5,8 +5,13 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <map>
+#include <vector>
+#include <limits.h>
 
 /// Ha ezt a fájlt módosítjátok, akkor gyorsan szinkronizáljátok, nehogy felülírjuk egymás munkáját
+
+const int INF = INT_MAX;
 
 /// -------- Detti -----------
 struct Kontener {
@@ -25,18 +30,29 @@ struct Hajo {
 	std::string hovaMegy;
 	int hanyNapAlattOda;
 	int hanyNapAlattVissza;
-int fazisEltolodas;
+    int fazisEltolodas;
 };
 
 /// ------- Zsolti --------------
 struct Csucs {
-    std::list<Kontener> kontenerek;          // ezt az elején fel kéne tölteni
-	std::unordered_map<std::string, int> elek;    // ugyanúgy működik mint a sima map, csak sokkal gyorsabb
-	std::string nev;                         // Város neve
+    std::list<Kontener> kontenerek;                     // ezt az elején fel kéne tölteni
+	std::unordered_map<std::string, int> elek;          // ugyanúgy működik mint a sima map, csak sokkal gyorsabb
+	int dist;                                           // Ezzel Zsoltinak nincs dolga, ez nekem kell (Tamás)
+};
+struct InduloHajo {                                     // Ez abban különbözik a hajo struct-tól, hogy a hajo struct-ban oda-vissza utak kerültek tárolásra, addíg ebben csak az oda- vagy a visszaút adatait tartalmazza
+	std::string jaratKod;
+	int kapacitas;
+	std::string honnanIndul;
+	std::string hovaMegy;
+	int mikorErOda;
+	int menetido;
 };
 struct Graf {
-	std::vector<Csucs> csucsok;
-	void frissit ();                    //frissíti az összes csúcs int értékét, azaz idõkölts.-ét
+    int nap;                                            // Éppen hanyadik napon járunk
+	std::unordered_map<std::string, Csucs> csucsok;
+	std::vector<InduloHajo> induloHajok;                // Adott napon induló hajók listája
+	void epitGraf();
+	void kovetkezoNap();                                // Növeli a nap változó értékét, eljésziti az adott napon induló hajók listáját és, frissíti az összes csúcs int értékét, azaz idõkölts.-ét
 };
 
 /// ------- HT -----------
@@ -50,18 +66,22 @@ struct Parancs {
 
 struct Paszuj {
 private:
-	std::unordered_map<std::string, Varos> varosok;   // város neve, konténerekbõl álló vektor
-	std::vector<Hajo> hajok;                // navajonmilehet.
+	std::map<std::string, Varos> varosok;               // város neve, konténerekbõl álló vektor
+	std::vector<Hajo> hajok;                            // navajonmilehet.
 	Graf graf;
-	void epitGraf();                        // Gráf építése - Zsolti feladata
-	void parancsol();                       // Tamás írja
-	int Dijkstra(Graf graf, std::string honnan, std::string hova);
+	std::vector<Parancs> parancsok;
+
+	void epitGraf();                                    // Gráf építése - Zsolti feladata
+	bool parancsol();                                   // Tamás írja
+	int Dijkstra(std::string honnan, std::string hova);
+
 public:
-	void beolvas(std::string varosok, std::string hajok);      // Detti írja meg a beolvasós fvt
-	void kiir(std::string fajlNev);         // Detti írja meg a kiírós fvt
+	void beolvas(std::string varosok, std::string hajok);// Detti írja meg a beolvasós fvt
+	void kiir(std::string fajlNev);                     // Detti írja meg a kiírós fvt
 	void rum() {
         epitGraf();
-        parancsol();
+        while(parancsol())                              // A parancsol() akkor fog hamissal visszatérni, ha az összes konténer a célhelyen van
+            graf.kovetkezoNap();
 	}
 };
 
