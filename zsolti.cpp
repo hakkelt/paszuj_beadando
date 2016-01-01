@@ -4,13 +4,12 @@ using namespace std;
 
 /* epitGraf függvény leírása
     Teljes gráfot kell építened (bármelyik két csúcs közt van él ;) ), amiben a csúcspontok
-    az egyes városok,és az élek súlya legyen egyenlõ a hajóra való várakozási idõ és az utazási idõ
-    összegével. Azon az élek súlya, melyek két olyan város kötnek össze, melyek közt nincs közvetlen
-    hajójárat, legyen végtelen (használd az INF konstanst! - a paszuj.h-ban hoztam létre, itt simán
-    az INF szó begépelésével tudsz rá hivatkozni). Az élek legyenek minimálisak, vagyis ha több járat
-    is van a két város közt, akkor válaszd ki azt, ami a leggyorsabban odaér. A nap változó értékét
-    állítsd 0-ra. Az induloHajok vectorba azoknak a hajóknak az adata kerüljön, amelyek a 0.napon
-    indulnak el.
+    az egyes városok,és az élek súlya legyen egyenlõ az utazási idõvel. Azon az élek súlya, melyek
+    két olyan város kötnek össze, melyek közt nincs közvetlen hajójárat, legyen végtelen
+    (használd az INF konstanst! - a paszuj.h-ban hoztam létre, itt simán az INF szó begépelésével
+    tudsz rá hivatkozni). Az élek legyenek minimálisak, vagyis ha több járat is van a két város közt,
+    akkor válaszd ki azt, ami a leggyorsabban odaér. A nap változó értékét állítsd 0-ra.
+    Az induloHajok vectorba azoknak a hajóknak az adata kerüljön, amelyek a 0.napon indulnak el.
 */
 void Paszuj::epitGraf() {
     /// TODO
@@ -21,9 +20,7 @@ void Paszuj::epitGraf() {
     napon induló hajók adataival. Ha az adott hajó épp visszafele indul el, akkor a honnanIndul változóba
     az eredeti hajok változó szerinti hovaMegy változó értéke kerüljön, a hovaMegy-be pedig a honnanIndul,
     és a mikorErOda változóba pedig az kerüljön, hogy hányadik napon fog legközelebb kikötni (vagyis hányadik
-    napon fog odaérni a "hovaMegy" változóban leírt helyre. Ezután frissítsd az éleket, hogy az aktuális nap
-    szerinti értékeket mutassák - vagyis hogy adott városból adott városba minimálisan hány nap alatt lehet
-    eljutni feltéve, hogy van közvetlen járat (ha nincs, akkor az él értéke továbbra is INF).
+    napon fog odaérni a "hovaMegy" változóban leírt helyre. Az éleket nem kell frissíteni.
 */
 void Graf::kovetkezoNap() {
     /// TODO

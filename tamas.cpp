@@ -7,9 +7,9 @@ using namespace std;
 /*
     Két konténer-prioritás párt hasonlít össze, az lesz a nagyobb, amelyiknek nagyobb a prioritása.
     Ha egyenlő a két elem prioritása, akkor a bónuszidő dönt. A prioritás ebben az esetben azt írja le,
-    hogy ha a konténer átkerülne egy másik helyre, akkor megbecsüli, hogy onnan kb hány nappal kevesebb
-    idő alatt ér át a rendeltetési helyére, ezért az lesz a nagyobb prioritású, amelyiknek kisebb az
-    így kapott úthossza, ezért van fordítva a relációs jel.
+    hogy ha a konténer átkerülne egy másik helyre, akkor megbecsüli alulról, hogy onnan kb hány nappal
+    kevesebb idő alatt ér át a rendeltetési helyére, ezért az lesz a nagyobb prioritású, amelyiknek
+    kisebb az így kapott úthossza, ezért van fordítva a relációs jel.
     Ezt a funktort a parancsol függvényben deklarált prioritásos sorhoz hoztam létre.
 */
 struct Compare {
