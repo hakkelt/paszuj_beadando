@@ -10,15 +10,15 @@ void Paszuj::beolvas(string varosok, string hajok) {
     ifstream f("rakomany.txt");
     Kontener k;
     Varos v;
-    Paszuj p;
     stringstream ss;
     string temp;
+    int mennyiseg;
     while(f.good())
     {
         getline(f, k.rakomanyNev, ' ');
         getline(f, temp, ' ');
         ss << temp;
-        ss >> k.mennyiseg;
+        ss >> mennyiseg;
         ss.clear();
         temp.clear();
         getline(f, k.hely, ' ');
@@ -30,7 +30,10 @@ void Paszuj::beolvas(string varosok, string hajok) {
         temp.clear();
         v.kontenerek.push_back(k);
     }
-    p.varosok.insert(pair<string,Varos>(k.hely, v));
+    for (int i=0; i<mennyiseg; i++)
+    {
+        varosok[k.hely]= v;
+    }
 
     ifstream ff("menetrend.txt");
     Hajo h;
@@ -51,7 +54,7 @@ void Paszuj::beolvas(string varosok, string hajok) {
         getline(ff, temp);
         ss >> temp;
         ss << h.fazisEltolodas;
-        p.hajok.push_back(h);
+        hajok.push_back(h);
     }
 }
 
