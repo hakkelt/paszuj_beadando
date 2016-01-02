@@ -25,3 +25,6 @@ void Paszuj::epitGraf() {
 void Graf::kovetkezoNap() {
     /// TODO
 }
+
+
+///BANÁNKRUMPLIFECSKEBÉLYEG
