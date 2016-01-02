@@ -12,7 +12,34 @@ using namespace std;
     Az induloHajok vectorba azoknak a hajóknak az adata kerüljön, amelyek a 0.napon indulnak el.
 */
 void Paszuj::epitGraf() {
-    /// TODO
+    graf.nap=0;                                                                                ///nap nullara allitva
+    for (map<string, Varos>::iterator it=varosok.begin(); it!=varosok.end(); ++it){            ///varosok es kontenerek betoltese a csucsokba
+
+        graf.csucsok[it->first];                                                               ///egy csucs hozzaadasa
+        for (int i=0; i< it->second.kontenerek.size(); i++){                                   ///hozza valo kontenerek hozzaadasa
+            graf.csucsok[it->first].kontenerek.push_back(it->second.kontenerek[i]);
+        }
+        for (map<string, Varos>::iterator it2=varosok.begin(); it2!=varosok.end(); ++it2){
+            graf.csucsok[it->first].elek[it2->first] = INF;                                    ///minden elnek maximum a sulya eleinte
+        }                                                                                      ///teljes graf alakul ki vegtelen sullyal
+        graf.csucsok[it->first].elek[it->first] = 0;                                           /// az onmagukba vezeto hurokel nulla sulyu
+    }
+    for (int i=0; i<hajok.size(); i++){                                                        /// csucsbol indulo elek es sulyaik hozzaadasa
+            if (graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]>hajok[i].hanyNapAlattOda)
+            graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]=hajok[i].hanyNapAlattOda;
+            if (graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]>hajok[i].hanyNapAlattVissza)
+            graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]=hajok[i].hanyNapAlattVissza;
+            if (hajok[i].fazisEltolodas == 0) {                                                /// 0.ik napon indulo hajok betoltese
+                InduloHajo x;
+                x.honnanIndul=hajok[i].honnanIndul;
+                x.hovaMegy=hajok[i].hovaMegy;
+                x.jaratKod=hajok[i].jaratKod;
+                x.kapacitas=hajok[i].kapacitas;
+                x.menetido=hajok[i].hanyNapAlattOda;
+                x.mikorErOda=hajok[i].hanyNapAlattOda;
+                graf.induloHajok.push_back(x);
+            }
+    }
 }
 
 /* kovetkezoNap függvény leírása
@@ -25,6 +52,3 @@ void Paszuj::epitGraf() {
 void Graf::kovetkezoNap() {
     /// TODO
 }
-
-
-///BANÁNKRUMPLIFECSKEBÉLYEG
