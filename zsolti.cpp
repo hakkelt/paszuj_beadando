@@ -55,9 +55,9 @@ void Paszuj::kovetkezoNap() {
 
     for (int i=0; i<hajok.size(); i++) {
         if (hajok[i].fazisEltolodas == graf.nap or
-            graf.nap % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattOdaVissza) == hajok[i].fazisEltolodas or
-            graf.nap % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattOdaVissza)==
-            (hajok[i].fazisEltolodas+hajok[i].hanyNapAlattOda)%(hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattOdaVissza)
+            graf.nap % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza) == hajok[i].fazisEltolodas or
+            graf.nap % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza)==
+            (hajok[i].fazisEltolodas+hajok[i].hanyNapAlattOda)%(hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza)
             ) {                                                /// x. napon indulo hajok betoltese
             InduloHajo x;
             x.honnanIndul=hajok[i].honnanIndul;
