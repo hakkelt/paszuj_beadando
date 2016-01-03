@@ -9,26 +9,19 @@ using namespace std;
 void Paszuj::beolvas(string kontenerekFajl, string hajokFajl) {
     ifstream f(kontenerekFajl);
     Kontener k;
-    stringstream ss;
     string temp;
     int mennyiseg;
+    stringstream sor;
     getline(f, temp);
     while(f.good())
     {
-        getline(f, k.rakomanyNev, ' ');
-        getline(f, temp, ' ');
-        ss << temp;
-        ss >> mennyiseg;
-        cout << ss;
-        ss.clear();
-        temp.clear();
-        getline(f, k.hely, ' ');
-        getline(f, k.celHely, ' ');
         getline(f, temp);
-        ss << temp;
-        ss >> k.bonuszIdo;
-        ss.clear();
-        temp.clear();
+        sor << temp;
+        sor >> k.rakomanyNev;
+        sor >> mennyiseg;
+        sor >> k.hely;
+        sor >> k.celHely;
+        sor >> k.bonuszIdo;
         for (int i=0; i<mennyiseg; i++)
         {
             varosok[k.hely].kontenerek.push_back(k);
@@ -37,23 +30,18 @@ void Paszuj::beolvas(string kontenerekFajl, string hajokFajl) {
 
     ifstream ff(hajokFajl);
     Hajo h;
+    getline(ff, temp);
     while(ff.good())
     {
-        getline(ff, h.jaratKod, ' ');
-        getline(ff, temp, ' ');
-        ss << temp;
-        ss >> h.kapacitas;
-        getline(ff, h.honnanIndul, ' ');
-        getline(ff, h.hovaMegy, ' ');
-        getline(ff, temp, ' ');
-        ss << temp;
-        ss >> h.hanyNapAlattOda;
-        getline(ff, temp, ' ');
-        ss << temp;
-        ss >> h.hanyNapAlattVissza;
         getline(ff, temp);
-        ss >> temp;
-        ss << h.fazisEltolodas;
+        sor << temp;
+        sor >> h.jaratKod;
+        sor >> h.kapacitas;
+        sor >> h.honnanIndul;
+        sor >> h.hovaMegy;
+        sor >> h.hanyNapAlattOda;
+        sor >> h.hanyNapAlattVissza;
+        sor >> h.fazisEltolodas;
         hajok.push_back(h);
     }
 }
