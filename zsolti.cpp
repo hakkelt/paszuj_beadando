@@ -19,17 +19,17 @@ void Paszuj::epitGraf() {
         for (int i=0; i< it->second.kontenerek.size(); i++){                                   ///hozza valo kontenerek hozzaadasa
             graf.csucsok[it->first].kontenerek.push_back(it->second.kontenerek[i]);
         }
-        for (map<string, Varos>::iterator it2=varosok.begin(); it2!=varosok.end(); ++it2){
-            graf.csucsok[it->first].elek[it2->first] = INF;                                    ///minden elnek maximum a sulya eleinte
-        }                                                                                      ///teljes graf alakul ki vegtelen sullyal
-        graf.csucsok[it->first].elek[it->first] = 0;                                           /// az onmagukba vezeto hurokel nulla sulyu
     }
+
     for (int i=0; i<hajok.size(); i++){                                                        /// csucsbol indulo elek es sulyaik hozzaadasa
-            if (graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]>hajok[i].hanyNapAlattOda)
+            if (graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]==0 or
+                graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]>hajok[i].hanyNapAlattOda)
             graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]=hajok[i].hanyNapAlattOda;
-            if (graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]>hajok[i].hanyNapAlattVissza)
+            if (graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]==0 or
+                graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]>hajok[i].hanyNapAlattVissza)
             graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]=hajok[i].hanyNapAlattVissza;
-            if (hajok[i].fazisEltolodas == 0) {                                                /// 0.ik napon indulo hajok betoltese
+
+            if (hajok[i].fazisEltolodas == 0) {                                                /// 0ik napon indulo hajok betoltese
                 InduloHajo x;
                 x.honnanIndul=hajok[i].honnanIndul;
                 x.hovaMegy=hajok[i].hovaMegy;
@@ -50,5 +50,19 @@ void Paszuj::epitGraf() {
     napon fog odaérni a "hovaMegy" változóban leírt helyre. Az éleket nem kell frissíteni.
 */
 void Graf::kovetkezoNap() {
-    /// TODO
+    graf.nap++;
+    induloHajok.clear();
+
+    for (int i=0; i<hajok.size(); i++) {
+        if (hajok[i].fazisEltolodas == graf.nap) {                                                /// x. napon indulo hajok betoltese
+            InduloHajo x;
+            x.honnanIndul=hajok[i].honnanIndul;
+            x.hovaMegy=hajok[i].hovaMegy;
+            x.jaratKod=hajok[i].jaratKod;
+            x.kapacitas=hajok[i].kapacitas;
+            x.menetido=hajok[i].hanyNapAlattOda;
+            x.mikorErOda=hajok[i].hanyNapAlattOda;
+            graf.induloHajok.push_back(x);
+        }
+    }
 }
