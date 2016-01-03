@@ -11,8 +11,6 @@
 
 /// Ha ezt a fájlt módosítjátok, akkor gyorsan szinkronizáljátok, nehogy felülírjuk egymás munkáját
 
-const int INF = INT_MAX;
-
 /// -------- Detti -----------
 struct Kontener {
 	std::string hely;
@@ -21,7 +19,7 @@ struct Kontener {
 	int bonuszIdo;
 };
 struct Varos {
-	std::vector<Kontener> kontenerek;
+	std::list<Kontener> kontenerek;
 };
 struct Hajo {
 	std::string jaratKod;
@@ -35,7 +33,7 @@ struct Hajo {
 
 /// ------- Zsolti --------------
 struct Csucs {
-    std::list<Kontener> kontenerek;                     // ezt az elején fel kéne tölteni
+    std::list<Kontener> * kontenerek;                   // ezt az elején fel kéne tölteni
 	std::unordered_map<std::string, int> elek;          // ugyanúgy működik mint a sima map, csak sokkal gyorsabb
 	int dist;                                           // Ezzel Zsoltinak nincs dolga, ez nekem kell (Tamás)
 };
@@ -44,7 +42,6 @@ struct InduloHajo {                                     // Ez abban különbözi
 	int kapacitas;
 	std::string honnanIndul;
 	std::string hovaMegy;
-	int mikorErOda;
 	int menetido;
 };
 struct Graf {

@@ -4,30 +4,23 @@ using namespace std;
 
 /* epitGraf függvény leírása
     Teljes gráfot kell építened (bármelyik két csúcs közt van él ;) ), amiben a csúcspontok
-    az egyes városok,és az élek súlya legyen egyenlõ az utazási idõvel. Azon az élek súlya, melyek
-    két olyan város kötnek össze, melyek közt nincs közvetlen hajójárat, legyen végtelen
-    (használd az INF konstanst! - a paszuj.h-ban hoztam létre, itt simán az INF szó begépelésével
-    tudsz rá hivatkozni). Az élek legyenek minimálisak, vagyis ha több járat is van a két város közt,
+    az egyes városok,és az élek súlya legyen egyenlõ az utazási idõvel.
+    Az élek legyenek minimálisak, vagyis ha több járat is van a két város közt,
     akkor válaszd ki azt, ami a leggyorsabban odaér. A nap változó értékét állítsd 0-ra.
     Az induloHajok vectorba azoknak a hajóknak az adata kerüljön, amelyek a 0.napon indulnak el.
 */
 void Paszuj::epitGraf() {
     graf.nap=0;                                                                                ///nap nullara allitva
-    for (map<string, Varos>::iterator it=varosok.begin(); it!=varosok.end(); ++it){            ///varosok es kontenerek betoltese a csucsokba
+    for (map<string, Varos>::iterator it=varosok.begin(); it!=varosok.end(); ++it)             ///varosok es kontenerek betoltese a csucsokba
+        graf.csucsok[it->first].kontenerek = &(it->second.kontenerek);
 
-        graf.csucsok[it->first];                                                               ///egy csucs hozzaadasa
-        for (int i=0; i< it->second.kontenerek.size(); i++){                                   ///hozza valo kontenerek hozzaadasa
-            graf.csucsok[it->first].kontenerek.push_back(it->second.kontenerek[i]);
-        }
-    }
-
-    for (int i=0; i<hajok.size(); i++){                                                        /// csucsbol indulo elek es sulyaik hozzaadasa
-            if (graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]==0 or
-                graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]>hajok[i].hanyNapAlattOda)
-            graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy]=hajok[i].hanyNapAlattOda;
-            if (graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]==0 or
-                graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]>hajok[i].hanyNapAlattVissza)
-            graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul]=hajok[i].hanyNapAlattVissza;
+    for (size_t i=0; i<hajok.size(); i++){                                                      /// csucsbol indulo elek es sulyaik hozzaadasa
+            if (graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy] == 0 or
+                graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy] > hajok[i].hanyNapAlattOda)
+                    graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy] = hajok[i].hanyNapAlattOda;
+            if (graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul] == 0 or
+                graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul] > hajok[i].hanyNapAlattVissza)
+                    graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul] = hajok[i].hanyNapAlattVissza;
 
             if (hajok[i].fazisEltolodas == 0) {                                                /// 0ik napon indulo hajok betoltese
                 InduloHajo x;
@@ -36,7 +29,6 @@ void Paszuj::epitGraf() {
                 x.jaratKod=hajok[i].jaratKod;
                 x.kapacitas=hajok[i].kapacitas;
                 x.menetido=hajok[i].hanyNapAlattOda;
-                x.mikorErOda=hajok[i].hanyNapAlattOda;
                 graf.induloHajok.push_back(x);
             }
     }
@@ -51,21 +43,30 @@ void Paszuj::epitGraf() {
 */
 void Paszuj::kovetkezoNap() {
     graf.nap++;
-    induloHajok.clear();
+    graf.induloHajok.clear();
 
-    for (int i=0; i<hajok.size(); i++) {
-        if (hajok[i].fazisEltolodas == graf.nap or
-            graf.nap % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza) == hajok[i].fazisEltolodas or
-            graf.nap % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza)==
-            (hajok[i].fazisEltolodas+hajok[i].hanyNapAlattOda)%(hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza)
-            ) {                                                /// x. napon indulo hajok betoltese
+    for (size_t i=0; i<hajok.size(); i++) {
+        if (graf.nap >= hajok[i].fazisEltolodas and
+            (graf.nap - hajok[i].fazisEltolodas) % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza) == 0)
+        {                                            /// x. napon indulo hajok betoltese
             InduloHajo x;
             x.honnanIndul=hajok[i].honnanIndul;
             x.hovaMegy=hajok[i].hovaMegy;
             x.jaratKod=hajok[i].jaratKod;
             x.kapacitas=hajok[i].kapacitas;
             x.menetido=hajok[i].hanyNapAlattOda;
-            x.mikorErOda=hajok[i].hanyNapAlattOda;
+            graf.induloHajok.push_back(x);
+
+        }
+        else if (graf.nap >= hajok[i].fazisEltolodas + hajok[i].hanyNapAlattOda and
+            (graf.nap - hajok[i].fazisEltolodas - hajok[i].hanyNapAlattOda) % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza) == 0)
+        {                                       /// x. napon visszaindulo hajok betoltese
+            InduloHajo x;
+            x.honnanIndul=hajok[i].honnanIndul;
+            x.hovaMegy=hajok[i].hovaMegy;
+            x.jaratKod=hajok[i].jaratKod;
+            x.kapacitas=hajok[i].kapacitas;
+            x.menetido=hajok[i].hanyNapAlattVissza;
             graf.induloHajok.push_back(x);
         }
     }

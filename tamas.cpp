@@ -36,15 +36,15 @@ bool Paszuj::parancsol() {
     bool good = false;
 
     for (auto h : graf.induloHajok) {
-        if (graf.csucsok[h.honnanIndul].kontenerek.size()) {
+        if (graf.csucsok[h.honnanIndul].kontenerek->size()) {
             good = true;
 
             priority_queue< pair<list<Kontener>::iterator, int>,
                         vector< pair<list<Kontener>::iterator, int> >,
                         Compare> kontenerLista;
 
-            for (list<Kontener>::iterator k = graf.csucsok[h.honnanIndul].kontenerek.begin();
-                k != graf.csucsok[h.honnanIndul].kontenerek.end(); k++) {
+            for (list<Kontener>::iterator k = graf.csucsok[h.honnanIndul].kontenerek->begin();
+                k != graf.csucsok[h.honnanIndul].kontenerek->end(); k++) {
                     int kulonbseg = Dijkstra(h.hovaMegy, k->celHely) + h.menetido - Dijkstra(h.honnanIndul, k->celHely);
                     if (0 < kulonbseg)
                         kontenerLista.push( make_pair(k, kulonbseg));
@@ -60,14 +60,12 @@ bool Paszuj::parancsol() {
                 uj.bonuszIdo = act->bonuszIdo - graf.nap;
                 uj.jaratKod = h.jaratKod;
                 uj.mennyiseg = 1;
-                uj.mikorErkezik = graf.nap + h.mikorErOda;
+                uj.mikorErkezik = graf.nap + h.menetido;
                 uj.rakomanyNev = act->rakomanyNev;
 
-                graf.csucsok[h.honnanIndul].kontenerek.erase(act);
-                if (h.hovaMegy != act->celHely) {
-                    act->hely = h.hovaMegy;
-                    graf.csucsok[h.hovaMegy].kontenerek.push_back(*act);
-                }
+                graf.csucsok[h.honnanIndul].kontenerek->erase(act);
+                if (h.hovaMegy != act->celHely)
+                    graf.csucsok[h.hovaMegy].kontenerek->push_back(*act);
             }
         }
     }
@@ -82,6 +80,8 @@ bool Paszuj::parancsol() {
 */
 int Paszuj::Dijkstra(string honnan, string hova) {
     set<string> visited;
+
+    const int INF = INT_MAX;
 
     for (auto i : graf.csucsok)
         i.second.dist = INF;

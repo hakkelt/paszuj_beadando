@@ -1,4 +1,5 @@
 #include <iostream>
+#include <locale.h>
 #include "paszuj.h"
 
 using namespace std;
@@ -6,12 +7,13 @@ using namespace std;
 int main()
 {
     Paszuj p;
-    cout << "Adatok beolvasasa..." << endl; cout.flush();
+    setlocale (LC_ALL,"");
+    cout << "Adatok beolvasása..." << endl; cout.flush();
     p.beolvas("varosok.txt", "hajok.txt");
-    cout << "Utvonalak keresese..." << endl; cout.flush();
+    cout << "Útvonalak keresése..." << endl; cout.flush();
     p.rum();
-    cout << "Utasitasok kiirasa..." << endl; cout.flush();
+    cout << "Utasitasok kiírasa..." << endl; cout.flush();
     p.kiir("out.txt");
-    cout << "Be van fejezve mar." << endl; cout.flush();
+    cout << "A program befejezte futását." << endl; cout.flush();
     return 0;
 }
