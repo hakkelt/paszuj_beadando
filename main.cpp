@@ -9,7 +9,7 @@ int main()
     Paszuj p;
     setlocale (LC_ALL,"");
     cout << "Adatok beolvasása..." << endl; cout.flush();
-    p.beolvas("varosok.txt", "hajok.txt");
+    p.beolvas("rakomany.txt", "menetrend.txt");
     cout << "Útvonalak keresése..." << endl; cout.flush();
     p.rum();
     cout << "Utasitasok kiírasa..." << endl; cout.flush();
