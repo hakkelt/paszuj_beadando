@@ -73,7 +73,7 @@ private:
 	int Dijkstra(std::string honnan, std::string hova);
 
 public:
-	void beolvas(std::string varosok, std::string hajok);// Detti írja meg a beolvasós fvt
+	void beolvas(std::string kontenerekFajl, std::string hajokFajl);// Detti írja meg a beolvasós fvt
 	void kiir(std::string fajlNev);                     // Detti írja meg a kiírós fvt
 	void rum() {
         epitGraf();
