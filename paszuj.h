@@ -52,7 +52,6 @@ struct Graf {
 	std::unordered_map<std::string, Csucs> csucsok;
 	std::vector<InduloHajo> induloHajok;                // Adott napon induló hajók listája
 	void epitGraf();
-	void kovetkezoNap();                                // Növeli a nap változó értékét, eljésziti az adott napon induló hajók listáját és, frissíti az összes csúcs int értékét, azaz idõkölts.-ét
 };
 
 /// ------- HT -----------
@@ -73,6 +72,7 @@ private:
 
 	void epitGraf();                                    // Gráf építése - Zsolti feladata
 	bool parancsol();                                   // Tamás írja
+    void kovetkezoNap();                                // Növeli a nap változó értékét, eljésziti az adott napon induló hajók listáját és, frissíti az összes csúcs int értékét, azaz idõkölts.-ét
 	int Dijkstra(std::string honnan, std::string hova);
 
 public:
@@ -81,7 +81,7 @@ public:
 	void rum() {
         epitGraf();
         while(parancsol())                              // A parancsol() akkor fog hamissal visszatérni, ha az összes konténer a célhelyen van
-            graf.kovetkezoNap();
+            kovetkezoNap();
 	}
 };
 

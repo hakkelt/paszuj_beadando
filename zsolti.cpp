@@ -49,12 +49,16 @@ void Paszuj::epitGraf() {
     és a mikorErOda változóba pedig az kerüljön, hogy hányadik napon fog legközelebb kikötni (vagyis hányadik
     napon fog odaérni a "hovaMegy" változóban leírt helyre. Az éleket nem kell frissíteni.
 */
-void Graf::kovetkezoNap() {
+void Paszuj::kovetkezoNap() {
     graf.nap++;
     induloHajok.clear();
 
     for (int i=0; i<hajok.size(); i++) {
-        if (hajok[i].fazisEltolodas == graf.nap) {                                                /// x. napon indulo hajok betoltese
+        if (hajok[i].fazisEltolodas == graf.nap or
+            graf.nap % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattOdaVissza) == hajok[i].fazisEltolodas or
+            graf.nap % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattOdaVissza)==
+            (hajok[i].fazisEltolodas+hajok[i].hanyNapAlattOda)%(hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattOdaVissza)
+            ) {                                                /// x. napon indulo hajok betoltese
             InduloHajo x;
             x.honnanIndul=hajok[i].honnanIndul;
             x.hovaMegy=hajok[i].hovaMegy;
