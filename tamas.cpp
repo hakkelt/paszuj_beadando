@@ -44,10 +44,15 @@ bool Paszuj::parancsol() {
                         Compare> kontenerLista;
 
             for (list<Kontener>::iterator k = graf.csucsok[h.honnanIndul].kontenerek.begin();
-                k != graf.csucsok[h.honnanIndul].kontenerek.end(); k++)
-                    kontenerLista.push( make_pair(k, Dijkstra(h.hovaMegy, k->celHely) + h.menetido - Dijkstra(h.honnanIndul, k->celHely)) );
+                k != graf.csucsok[h.honnanIndul].kontenerek.end(); k++) {
+                    int kulonbseg = Dijkstra(h.hovaMegy, k->celHely) + h.menetido - Dijkstra(h.honnanIndul, k->celHely);
+                    if (0 < kulonbseg)
+                        kontenerLista.push( make_pair(k, kulonbseg));
+                }
 
             for(int i = 0; i < h.kapacitas; i++) {
+                if (kontenerLista.empty()) break;
+
                 list<Kontener>::iterator act = kontenerLista.top().first;
                 kontenerLista.pop();
 
