@@ -32,13 +32,10 @@ struct Compare {
     gráfban amiket szállítani kell. Amikor elfogytak a szállítandó konténerek, akkor a függvény hamissal tér
     vissza.
 */
-bool Paszuj::parancsol() {
-    bool good = false;
+void Paszuj::parancsol() {
 
     for (auto h : graf.induloHajok) {
         if (graf.csucsok[h.honnanIndul].kontenerek->size()) {
-            good = true;
-
             priority_queue< pair<list<Kontener>::iterator, int>,
                         vector< pair<list<Kontener>::iterator, int> >,
                         Compare> kontenerLista;
@@ -46,31 +43,50 @@ bool Paszuj::parancsol() {
             for (list<Kontener>::iterator k = graf.csucsok[h.honnanIndul].kontenerek->begin();
                 k != graf.csucsok[h.honnanIndul].kontenerek->end(); k++) {
                     int kulonbseg = Dijkstra(h.hovaMegy, k->celHely) + h.menetido - Dijkstra(h.honnanIndul, k->celHely);
-                    if (0 < kulonbseg)
                         kontenerLista.push( make_pair(k, kulonbseg));
                 }
 
-            for(int i = 0; i < h.kapacitas; i++) {
-                if (kontenerLista.empty()) break;
+            int i = 0;
+            while (i < h.kapacitas and not kontenerLista.empty()) {
 
                 list<Kontener>::iterator act = kontenerLista.top().first;
                 kontenerLista.pop();
 
                 Parancs uj;
-                uj.bonuszIdo = act->bonuszIdo - graf.nap;
+                uj.bonuszIdo = (act->bonuszIdo - graf.nap < 0 ? 0 : act->bonuszIdo - graf.nap);
                 uj.jaratKod = h.jaratKod;
-                uj.mennyiseg = 1;
                 uj.mikorErkezik = graf.nap + h.menetido;
                 uj.rakomanyNev = act->rakomanyNev;
-
-                graf.csucsok[h.honnanIndul].kontenerek->erase(act);
-                if (h.hovaMegy != act->celHely)
-                    graf.csucsok[h.hovaMegy].kontenerek->push_back(*act);
+                if (i + act->mennyiseg <= h.kapacitas) {
+                    uj.mennyiseg = act->mennyiseg;
+                    if (h.hovaMegy != act->celHely)
+                        graf.csucsok[h.hovaMegy].kontenerek->push_back(*act);
+                    else {
+                        kontenerekSzama -= act->mennyiseg;
+                        if (0 < uj.bonuszIdo) bonuszIdore += act->mennyiseg;
+                    }
+                    graf.csucsok[h.honnanIndul].kontenerek->erase(act);
+                }
+                else {
+                    uj.mennyiseg = h.kapacitas - i;
+                    int temp = act->mennyiseg;
+                    act->mennyiseg = h.kapacitas - i;
+                    if (h.hovaMegy != act->celHely)
+                        graf.csucsok[h.hovaMegy].kontenerek->push_back(*act);
+                    else {
+                        kontenerekSzama -= act->mennyiseg;
+                        if (0 < uj.bonuszIdo) bonuszIdore += act->mennyiseg;
+                    }
+                    act->mennyiseg = temp - act->mennyiseg;
+                }
+                parancsok.push_back(uj);
+                i += uj.mennyiseg;
             }
         }
     }
 
-    return good;
+    if (graf.nap % 200 == 0)
+        cout << "Nap: " << graf.nap << "  \tKontenerek szama: " << kontenerekSzama << endl;
 }
 
 /*
@@ -79,32 +95,45 @@ bool Paszuj::parancsol() {
     utazik, akkor az eltelt három nap alatt meg kéne, hogy változzanak a gráfban az élek súlyai.
 */
 int Paszuj::Dijkstra(string honnan, string hova) {
-    set<string> visited;
+    int min_weight =  graf.csucsok[honnan].min_dist[hova];
+    if (min_weight != 0) return min_weight;
+
+    string min_name = honnan;
+
+    set<string> unvisited;
 
     const int INF = INT_MAX;
 
-    for (auto i : graf.csucsok)
-        i.second.dist = INF;
+    for (auto i : graf.csucsok) {
+        graf.csucsok[i.first].dist = INF;
+        unvisited.insert(i.first);
+    }
 
-    int min_weight = 0;
-    string min_name = honnan;
-
-    while (min_name != hova){
-        visited.insert(min_name);
+    while (min_name != hova) {
+        unvisited.erase(min_name);
         int min_search = INF;
-        for (auto i : graf.csucsok[min_name].elek)
-            if (i.second < INF and visited.count(i.first) and
-                (min_name == hova ? min_weight + i.second < graf.csucsok[i.first].dist :
-                 min_weight + i.second <= graf.csucsok[i.first].dist)) {
-                        graf.csucsok[i.first].dist = min_weight + i.second;
-                        if (min_weight + i.second < min_search) {
-                            min_search =  min_weight + i.second;
-                            min_name = i.first;
+        Csucs * actual = &(graf.csucsok[min_name]);
+        for (auto i : unvisited) {
+            int old_dist = graf.csucsok[i].dist;
+            if (actual->elek.count(i)) {
+                int new_dist = min_weight + actual->elek[i];
+                if (min_name == hova ? new_dist < old_dist : new_dist <= old_dist) {
+                        graf.csucsok[i].dist = new_dist;
                         }
+                if (new_dist < min_search) {
+                    min_search =  new_dist;
+                    min_name = i;
+                }
             }
+            else if (old_dist < min_search) {
+                min_search =  old_dist;
+                min_name = i;
+            }
+        }
         min_weight = min_search;
     }
 
+    graf.csucsok[honnan].min_dist[hova] = min_weight;
     return min_weight;
 }
 

@@ -8,6 +8,8 @@
 #include <map>
 #include <vector>
 #include <limits.h>
+#include <iostream>
+#include <locale.h>
 
 /// Ha ezt a fájlt módosítjátok, akkor gyorsan szinkronizáljátok, nehogy felülírjuk egymás munkáját
 
@@ -16,6 +18,7 @@ struct Kontener {
 	std::string hely;
 	std::string rakomanyNev;
 	std::string celHely;
+	int mennyiseg;
 	int bonuszIdo;
 };
 struct Varos {
@@ -36,6 +39,7 @@ struct Csucs {
     std::list<Kontener> * kontenerek;                   // ezt az elején fel kéne tölteni
 	std::unordered_map<std::string, int> elek;          // ugyanúgy működik mint a sima map, csak sokkal gyorsabb
 	int dist;                                           // Ezzel Zsoltinak nincs dolga, ez nekem kell (Tamás)
+    std::unordered_map<std::string, int> min_dist;
 };
 struct InduloHajo {                                     // Ez abban különbözik a hajo struct-tól, hogy a hajo struct-ban oda-vissza utak kerültek tárolásra, addíg ebben csak az oda- vagy a visszaút adatait tartalmazza
 	std::string jaratKod;
@@ -64,11 +68,13 @@ struct Paszuj {
 private:
 	std::map<std::string, Varos> varosok;               // város neve, konténerekbõl álló vektor
 	std::vector<Hajo> hajok;                            // navajonmilehet.
+	int kontenerekSzama;
+	int bonuszIdore;
 	Graf graf;
 	std::vector<Parancs> parancsok;
 
 	void epitGraf();                                    // Gráf építése - Zsolti feladata
-	bool parancsol();                                   // Tamás írja
+	void parancsol();                                   // Tamás írja
     void kovetkezoNap();                                // Növeli a nap változó értékét, eljésziti az adott napon induló hajók listáját és, frissíti az összes csúcs int értékét, azaz idõkölts.-ét
 	int Dijkstra(std::string honnan, std::string hova);
 
@@ -76,9 +82,15 @@ public:
 	void beolvas(std::string kontenerekFajl, std::string hajokFajl);// Detti írja meg a beolvasós fvt
 	void kiir(std::string fajlNev);                     // Detti írja meg a kiírós fvt
 	void rum() {
+	    bonuszIdore = 0;
         epitGraf();
-        while(parancsol())                              // A parancsol() akkor fog hamissal visszatérni, ha az összes konténer a célhelyen van
+        while(graf.nap < 20000 and 0 < kontenerekSzama) {
+            parancsol();
             kovetkezoNap();
+        }
+        std::cout << "Nap: " << graf.nap << "  \tKontenerek szama: " << kontenerekSzama << std::endl;
+        std::cout << "Parancsok szama: " << parancsok.size() << std::endl;
+        std::cout << "Bonuszidore teljesitet kontenerek szama: " << bonuszIdore << std::endl;
 	}
 };
 
