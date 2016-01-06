@@ -70,7 +70,7 @@ void Paszuj::parancsol() {
             // ... és végigmegyek az adott városból induló összes hajón minden egyes konténer esetében vizsgálva azt, hogy mennyivel jutna közelebb az adott konténer, ha felkerül az adott hajóra
             for(vector<InduloHajo>::iterator h = v->second.begin(); h != v->second.end(); h++) {
                 // Ennyivel javulna a konténer aktuális tartózkodási helye a célhelyhez képest, ha felkerülne az adott hajóra
-                int kulonbseg = Dijkstra(h->hova, k->celHely) + h->menetido - Dijkstra(v->first, k->celHely);
+                int kulonbseg = Dijkstra(v->first, k->celHely) - Dijkstra(h->hova, k->celHely) - h->menetido;
                 if (0 < kulonbseg) {
                     MennyireEriMegSzallitani uj;
                     uj.kontener = k;
@@ -120,7 +120,6 @@ void Paszuj::parancsol() {
                     k.hova = actHajo->hova;
                     k.kontener = *actKontener;
                     k.mikor = graf.nap + actHajo->menetido;
-                    //cout << "Fer - Nap: " << graf.nap << "   menetido: " << actHajo->menetido << endl;
                     graf.hajonKontenerek.push(k);
                 }
                 // Ha nem akkor "véletlenül" elfelejtem hozzáadni a listához, nem érkezik meg, úgyhogy eltűnik a gráfból, de nem is baj, hiszen nincs több dolgunk vele
@@ -145,7 +144,6 @@ void Paszuj::parancsol() {
                     k.hova = actHajo->hova;
                     k.kontener = *actKontener;                  // Itt másolat készül a konténerről (csökkentett mennyiseg mezővel), így a továbbiakban, ha megváltoztathatom az actKontener értékeit, a kikötőben maradó konténer fog változni
                     k.mikor = graf.nap + actHajo->menetido;
-                    //cout << "Nem fer - Nap: " << graf.nap << "   menetido: " << actHajo->menetido << endl;
                     graf.hajonKontenerek.push(k);
                 }
                 else {                                          // Ha odaérnek a helyhez, akkor
@@ -175,18 +173,11 @@ void Paszuj::parancsol() {
 //    int cnt = 0;
 //    for (auto v : varosok)
 //        for (auto k : v.second.kontenerek)
-//            cnt += k.mennyiseg;
-//    //cout << cnt << endl;
-//    std::priority_queue<HajonKontener, std::vector<HajonKontener>, NapPrioritas> temp = graf.hajonKontenerek;
-//    int cnt2 = 0;
-//    while (not temp.empty()) {
-//        cnt2 += temp.top().kontener.mennyiseg;
-//        //cout << temp.top().mikor << endl;
-//        temp.pop();
-//    }
+//            cnt += Dijkstra(v.first,k.celHely);
+//    cout << "Dijkstra: " << cnt << endl;
 
     if (graf.nap % 200 == 0)
-        cout << "Nap: " << graf.nap << "  \tKontenerek szama: " << kontenerekSzama << endl; // << " <> " << cnt << " + " << cnt2 << " = " << cnt+cnt2 << endl;
+        cout << "Nap: " << graf.nap << "  \tKontenerek szama: " << kontenerekSzama << endl;
 }
 
 /// ---------------------------------------------------------------------------------------------------
