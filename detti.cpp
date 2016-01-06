@@ -23,6 +23,7 @@ void Paszuj::beolvas(string kontenerekFajl, string hajokFajl) {
         sor >> k.hely;
         sor >> k.celHely;
         sor >> k.bonuszIdo;
+        k.ID = MAX_ID++;
         varosok[k.hely].kontenerek.push_back(k);
     }
 
@@ -36,8 +37,8 @@ void Paszuj::beolvas(string kontenerekFajl, string hajokFajl) {
         Hajo h;
         sor >> h.jaratKod;
         sor >> h.kapacitas;
-        sor >> h.honnanIndul;
-        sor >> h.hovaMegy;
+        sor >> h.honnan;
+        sor >> h.hova;
         sor >> h.hanyNapAlattOda;
         sor >> h.hanyNapAlattVissza;
         sor >> h.fazisEltolodas;
@@ -50,5 +51,12 @@ void Paszuj::beolvas(string kontenerekFajl, string hajokFajl) {
 }
 
 void Paszuj::kiir(string fajlNev) {
+    ofstream fff(fajlNev);
+    for (unsigned int i=0; i<parancsok.size(); i++)
+    {
+        fff << parancsok[i].mikorErkezik << ' ' <<
+        parancsok[i].jaratKod << ' ' << parancsok[i].rakomanyNev <<
+        ' ' << parancsok[i].bonuszIdo << ' ' << parancsok[i].mennyiseg << endl;
 
+    }
 }

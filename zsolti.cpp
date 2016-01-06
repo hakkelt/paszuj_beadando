@@ -15,21 +15,21 @@ void Paszuj::epitGraf() {
         graf.csucsok[it->first].kontenerek = &(it->second.kontenerek);
 
     for (size_t i=0; i<hajok.size(); i++){                                                      /// csucsbol indulo elek es sulyaik hozzaadasa
-            if (graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy] == 0 or
-                graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy] > hajok[i].hanyNapAlattOda)
-                    graf.csucsok[hajok[i].honnanIndul].elek[hajok[i].hovaMegy] = hajok[i].hanyNapAlattOda;
-            if (graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul] == 0 or
-                graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul] > hajok[i].hanyNapAlattVissza)
-                    graf.csucsok[hajok[i].hovaMegy].elek[hajok[i].honnanIndul] = hajok[i].hanyNapAlattVissza;
+            if (graf.csucsok[hajok[i].honnan].elek[hajok[i].hova] == 0 or
+                graf.csucsok[hajok[i].honnan].elek[hajok[i].hova] > hajok[i].hanyNapAlattOda)
+                    graf.csucsok[hajok[i].honnan].elek[hajok[i].hova] = hajok[i].hanyNapAlattOda;
+            if (graf.csucsok[hajok[i].hova].elek[hajok[i].honnan] == 0 or
+                graf.csucsok[hajok[i].hova].elek[hajok[i].honnan] > hajok[i].hanyNapAlattVissza)
+                    graf.csucsok[hajok[i].hova].elek[hajok[i].honnan] = hajok[i].hanyNapAlattVissza;
 
             if (hajok[i].fazisEltolodas == 0) {                                                /// 0ik napon indulo hajok betoltese
                 InduloHajo x;
-                x.honnanIndul=hajok[i].honnanIndul;
-                x.hovaMegy=hajok[i].hovaMegy;
+                x.honnan=hajok[i].honnan;
+                x.hova=hajok[i].hova;
                 x.jaratKod=hajok[i].jaratKod;
                 x.kapacitas=hajok[i].kapacitas;
                 x.menetido=hajok[i].hanyNapAlattOda;
-                graf.induloHajok.push_back(x);
+                graf.induloHajok[hajok[i].honnan].push_back(x);
             }
     }
 }
@@ -45,29 +45,34 @@ void Paszuj::kovetkezoNap() {
     graf.nap++;
     graf.induloHajok.clear();
 
+    while(graf.hajonKontenerek.size() != 0 and graf.hajonKontenerek.top().mikor<=graf.nap){
+        varosok[graf.hajonKontenerek.top().hova].kontenerek.push_back(graf.hajonKontenerek.top().kontener);
+        graf.hajonKontenerek.pop();
+    }
+
     for (size_t i=0; i<hajok.size(); i++) {
         if (graf.nap >= hajok[i].fazisEltolodas and
             (graf.nap - hajok[i].fazisEltolodas) % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza) == 0)
         {                                            /// x. napon indulo hajok betoltese
             InduloHajo x;
-            x.honnanIndul=hajok[i].honnanIndul;
-            x.hovaMegy=hajok[i].hovaMegy;
+            x.honnan=hajok[i].honnan;
+            x.hova=hajok[i].hova;
             x.jaratKod=hajok[i].jaratKod;
             x.kapacitas=hajok[i].kapacitas;
             x.menetido=hajok[i].hanyNapAlattOda;
-            graf.induloHajok.push_back(x);
+            graf.induloHajok[hajok[i].honnan].push_back(x);
 
         }
         else if (graf.nap >= hajok[i].fazisEltolodas + hajok[i].hanyNapAlattOda and
             (graf.nap - hajok[i].fazisEltolodas - hajok[i].hanyNapAlattOda) % (hajok[i].hanyNapAlattOda + hajok[i].hanyNapAlattVissza) == 0)
         {                                       /// x. napon visszaindulo hajok betoltese
             InduloHajo x;
-            x.honnanIndul=hajok[i].honnanIndul;
-            x.hovaMegy=hajok[i].hovaMegy;
+            x.honnan=hajok[i].hova;
+            x.hova=hajok[i].honnan;
             x.jaratKod=hajok[i].jaratKod;
             x.kapacitas=hajok[i].kapacitas;
             x.menetido=hajok[i].hanyNapAlattVissza;
-            graf.induloHajok.push_back(x);
+            graf.induloHajok[hajok[i].honnan].push_back(x);
         }
     }
 }
