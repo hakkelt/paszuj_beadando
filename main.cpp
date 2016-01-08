@@ -6,7 +6,7 @@ int main()
 {
     Paszuj p;
     setlocale(LC_ALL, "hu_HU.utf8");
-    cout << "Adatok beolvasása..." << endl; cout.flush();
+    cout << "Adatok beolvasasa..." << endl; cout.flush();
     p.beolvas("rakomany.txt", "menetrend.txt");
     cout << "Konténerek szállítása..." << endl; cout.flush();
     p.rum();

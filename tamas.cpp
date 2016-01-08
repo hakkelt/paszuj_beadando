@@ -55,14 +55,16 @@ bool ComparePriorityQueue (const vector<MennyireEriMegSzallitani> v1, const vect
     vissza.
 */
 void Paszuj::parancsol() {
+
+    cout << "\tNap: " << graf.nap << "  \tKontenerek szama: " << kontenerekSzama << endl;
+
     /*A belső prioritásos sorba (vectort használok praktikus okokból, de úgy rendezem, hogy prioritásos sor legyen)
      az fog kerülni, hogy az adott konténert ha felrakom a tartózkodási helye szerini
     városból induló hajókra, akkor az egyes hajók mennyivel viszik közelebb a konténert a végcéljához.
     Ez a map csoportosítja a kapott priotásos sorokat aszerint, hogy melyik konténerre vonatkoznak.
     Kulcsként iterátort használok, mert az (remélem) minden konténerre különböző*/
     map< int, vector<MennyireEriMegSzallitani> > gyujto;
-    // Végigmegyek azokon a városokon, ahonnan az adott nap indul hajó..
-    //cout << "Varosok szama, ahonnan hajo indul: " << graf.induloHajok.size() << endl;
+    // Végigmegyek azokon a városokon, ahonnan az adott nap indul hajó...
     for (unordered_map<string, vector<InduloHajo>>::iterator v = graf.induloHajok.begin(); v != graf.induloHajok.end(); v++) {
         // ...végigmegyek a városban található konténereken... (Azért használok iterátoros ciklus és nem rage-based-et, mert szükségem lesz az iterátorra magára)
       for (list<Kontener>::iterator k = graf.csucsok[v->first].kontenerek->begin();
@@ -70,7 +72,7 @@ void Paszuj::parancsol() {
             // ... és végigmegyek az adott városból induló összes hajón minden egyes konténer esetében vizsgálva azt, hogy mennyivel jutna közelebb az adott konténer, ha felkerül az adott hajóra
             for(vector<InduloHajo>::iterator h = v->second.begin(); h != v->second.end(); h++) {
                 // Ennyivel javulna a konténer aktuális tartózkodási helye a célhelyhez képest, ha felkerülne az adott hajóra
-                int kulonbseg = Dijkstra(v->first, k->celHely) - Dijkstra(h->hova, k->celHely) - h->menetido;
+                int kulonbseg = Dijkstra(v->first, k->celHely) - Dijkstra(h->hova, k->celHely);/// - h->menetido;
                 if (0 < kulonbseg) {
                     MennyireEriMegSzallitani uj;
                     uj.kontener = k;
@@ -95,12 +97,12 @@ void Paszuj::parancsol() {
     }
     make_heap(kivansagok.begin(), kivansagok.end(), ComparePriorityQueue);
 
+
     while (not kivansagok.empty()) {
         // A prioritásos sorból a top() függvénnyel tudom lekérdezni a legkisebb elemet
         // Bevezetek két rövidítést (actKontener és az actHajo), mert átláthatóbb, ha ezeken nem írom le ezerszer.
         list<Kontener>::iterator actKontener = kivansagok[0][0].kontener;       // Ez az a konténer lesz, aminek a legszebb a kívánsága: az összes közül ez ígér a legtöbbet, hogy mennyivel fog közelebb kerülni, ha feltesszük arra a hajóra, amire kéri
         vector<InduloHajo>::iterator actHajo = kivansagok[0][0].melyikHajon;    // Ez pedig a legszebb kívánságban szereplő hajó
-        //cout << kivansagok[0][0].mennyivelLeszKozelebb << " ";
         // Ha teljesíthető a kívánság, mert a hajón van még hely...
         if (0 < actHajo->kapacitas) {
             Parancs uj;
@@ -169,15 +171,6 @@ void Paszuj::parancsol() {
             }
         }
     }
-
-//    int cnt = 0;
-//    for (auto v : varosok)
-//        for (auto k : v.second.kontenerek)
-//            cnt += Dijkstra(v.first,k.celHely);
-//    cout << "Dijkstra: " << cnt << endl;
-
-    if (graf.nap % 200 == 0)
-        cout << "Nap: " << graf.nap << "  \tKontenerek szama: " << kontenerekSzama << endl;
 }
 
 /// ---------------------------------------------------------------------------------------------------

@@ -96,13 +96,15 @@ public:
 	void rum() {
 	    bonuszIdore = 0;
         epitGraf();
+	    double kezdKontenerSzam = kontenerekSzama;
         while(graf.nap < 20000 and 0 < kontenerekSzama) {
             parancsol();
             kovetkezoNap();
         }
-        std::cout << "Nap: " << graf.nap << "  \tKontenerek szama: " << kontenerekSzama << std::endl;
+        std::cout << "\tNap: " << graf.nap << "  \tKontenerek szama: " << kontenerekSzama << std::endl;
         std::cout << "Parancsok szama: " << parancsok.size() << std::endl;
-        std::cout << "Bonuszidore teljesitet kontenerek szama: " << bonuszIdore << std::endl << std::endl;
+        std::cout << "Bonuszidore teljesitet kontenerek szama: " << bonuszIdore << " ("
+            << bonuszIdore / kezdKontenerSzam * 100 << "%)" << std::endl << std::endl;
 	}
 };
 

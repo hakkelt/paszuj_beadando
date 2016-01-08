@@ -60,7 +60,7 @@ void Paszuj::kovetkezoNap() {
             x.jaratKod=hajok[i].jaratKod;
             x.kapacitas=hajok[i].kapacitas;
             x.menetido=hajok[i].hanyNapAlattOda;
-            graf.induloHajok[hajok[i].honnan].push_back(x);
+            graf.induloHajok[x.honnan].push_back(x);
 
         }
         else if (graf.nap >= hajok[i].fazisEltolodas + hajok[i].hanyNapAlattOda and
@@ -72,7 +72,7 @@ void Paszuj::kovetkezoNap() {
             x.jaratKod=hajok[i].jaratKod;
             x.kapacitas=hajok[i].kapacitas;
             x.menetido=hajok[i].hanyNapAlattVissza;
-            graf.induloHajok[hajok[i].honnan].push_back(x);
+            graf.induloHajok[x.honnan].push_back(x);
         }
     }
 }

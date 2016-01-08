@@ -46,8 +46,8 @@ void Paszuj::beolvas(string kontenerekFajl, string hajokFajl) {
     }
 
     setlocale (LC_ALL,"");
-    cout << "Városok száma: " << varosok.size() << endl;
-    cout << "Hajók száma: " << hajok.size() << endl << endl;
+    cout << "\tVárosok száma: " << varosok.size() << endl;
+    cout << "\tHajók száma: " << hajok.size() << endl << endl;
 }
 
 void Paszuj::kiir(string fajlNev) {
